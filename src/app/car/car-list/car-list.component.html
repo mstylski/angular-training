@@ -1,0 +1,11 @@
+<div class="input-group">
+  <input type="text" class="form-control" #filter (keyup)="search(filter.value)">
+
+  <span class="input-group-btn">
+    <button class="btn btn-default" type="button" (click)="search(''); filter.value = ''">Clear</button>
+  </span>
+</div>
+
+<ul class="car-list">
+  <li *ngFor="let car of cars" class="car-list-item">{{car.model}}</li>
+</ul>
