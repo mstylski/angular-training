@@ -1,10 +1,17 @@
 <div class="input-group">
-  <input type="text" class="form-control" #filter (keyup)="search(filter.value)">
-
-  <span class="input-group-btn">
-    <button class="btn btn-default" type="button" (click)="search(''); filter.value = ''">Clear</button>
-  </span>
+  <input type="text" class="form-control" [formControl]="searchFormControl">
+  <div *ngIf="searchFormControl.hasError('required')">
+    Please enter valid car model
+  </div>
 </div>
+<span class="input-group-btn">
+    <button class="btn btn-default" type="button" (click)="searchFormControl.reset()">Clear</button>
+  </span>
+<span class="input-group-btn">
+    <button class="btn btn-default search-button" type="button" (click)="getFilteredCars()"
+            [disabled]="searchFormControl.hasError('required') && !searchFormControl.value"
+    >Search</button>
+  </span>
 
 <ul class="car-list">
   <li *ngFor="let car of cars" class="car-list-item">{{car.model}}</li>
