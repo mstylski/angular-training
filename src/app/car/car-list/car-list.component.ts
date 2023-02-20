@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {CarService} from '../car.service';
 import {Car} from '../car.model';
 import {FormControl, Validators} from '@angular/forms';
-import {take} from 'rxjs';
+import {catchError, Observable, throwError} from 'rxjs';
 
 @Component({
   selector: 'app-car-list',
@@ -10,7 +10,7 @@ import {take} from 'rxjs';
   styleUrls: ['./car-list.component.scss']
 })
 export class CarListComponent {
-  cars: Car[] = [];
+  cars$!: Observable<Car[]>;
   searchFormControl: FormControl = new FormControl('', [
     Validators.required
   ]);
@@ -19,8 +19,11 @@ export class CarListComponent {
   }
 
   getFilteredCars() {
-    return this.carService.getFilteredCars(this.searchFormControl.value)
-      .pipe(take(1))
-      .subscribe(car => this.cars = car);
+    this.cars$ = this.carService.getFilteredCars(this.searchFormControl.value)
+      .pipe(catchError(() => throwError(() => new Error('error'))))
+  }
+
+  trackBy(index: number, value: any) {
+    return value.model
   }
 }

@@ -14,5 +14,5 @@
   </span>
 
 <ul class="car-list">
-  <li *ngFor="let car of cars" class="car-list-item">{{car.model}}</li>
+  <li *ngFor="let car of cars$ | async; trackBy: trackBy" class="car-list-item">{{car.model}}</li>
 </ul>

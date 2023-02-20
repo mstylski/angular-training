@@ -4,26 +4,12 @@ import {CarListComponent} from './car-list.component';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {CarService} from '../car.service';
 import {of} from 'rxjs';
+import {carMock} from '../car.mock';
 
 describe('CarListComponent', () => {
   let component: CarListComponent;
   let fixture: ComponentFixture<CarListComponent>;
   let carService: jasmine.SpyObj<CarService>
-
-  const carMock = {
-    city_mpg: 1,
-    class: 'standard pickup truck',
-    combination_mpg: 22,
-    cylinders: 4,
-    displacement: 2,
-    drive: 'rwd',
-    fuel_type: 'gas',
-    highway_mpg: 122,
-    make: 'dodge',
-    model: 'ford',
-    transmission: 'manual',
-    year: '2023'
-  }
 
   beforeEach(async () => {
     carService = jasmine.createSpyObj('carService', {
