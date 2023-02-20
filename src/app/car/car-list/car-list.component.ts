@@ -1,43 +1,29 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {CarService} from '../car.service';
 import {Car} from '../car.model';
-import {debounceTime, Subject} from 'rxjs';
+import {FormControl, Validators} from '@angular/forms';
+import {catchError, Observable, throwError} from 'rxjs';
 
 @Component({
   selector: 'app-car-list',
   templateUrl: './car-list.component.html',
   styleUrls: ['./car-list.component.scss']
 })
-export class CarListComponent implements OnInit {
-  cars: Car[] | null = []
-  private subject: Subject<string> = new Subject();
+export class CarListComponent {
+  cars$!: Observable<Car[]>;
+  searchFormControl: FormControl = new FormControl('', [
+    Validators.required
+  ]);
 
   constructor(private carService: CarService) {
-
   }
 
-  ngOnInit() {
-    this.handleSearch()
+  getFilteredCars() {
+    this.cars$ = this.carService.getFilteredCars(this.searchFormControl.value)
+      .pipe(catchError(() => throwError(() => new Error('error'))))
   }
 
-  private handleSearch() {
-    this.subject.pipe(
-      debounceTime(500)
-    )
-      .subscribe(searchTextValue => {
-      this.getFilteredCars(searchTextValue)
-    });
+  trackBy(index: number, value: any) {
+    return value.model
   }
-
-  search(searchTextValue: string) {
-    this.subject.next(searchTextValue);
-  }
-
-  private getFilteredCars(model: string) {
-    return this.carService.getFilteredCars(model)
-      .subscribe(filtered => {
-        this.cars = filtered
-      })
-  }
-
 }
